@@ -39,10 +39,10 @@ HEADERS += \
     passwordsharing.h \
     crypt.h \
     client.h \
-    config.h \
     server.h \
     connectionthread.h \
-    addressdialog.h
+    addressdialog.h \
+    support.h
 
 FORMS += \
         mainwindow.ui \

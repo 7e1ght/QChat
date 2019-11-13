@@ -1,9 +1,9 @@
 #include "passwordsharing.h"
+
 #include <QDateTime>
 #include <QtMath>
 #include <QVector>
 #include <QDebug>
-
 
 unsigned PasswordSharing::countRelativePrime()
 {

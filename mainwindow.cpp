@@ -35,7 +35,19 @@ void MainWindow::parseInput()
     QString out = ui->outMessage->text();
 
     if(out[0] == '/')
-    {}
+    {
+        QStringList list = out.split(" ");
+        if(out == "/clear")
+            ui->inMessage->clear();
+
+        else if(list[0] == "/set")
+        {
+            if(list[1] == "nickname")
+                client->setNickname(list[2]);
+        }
+
+    }
+
     else
     {
         slotWriteToUser("[" +
@@ -46,6 +58,12 @@ void MainWindow::parseInput()
                         out);
         client->sendToServer(out);
     }
+}
+
+void MainWindow::on_send_clicked()
+{
+    parseInput();
+    ui->outMessage->setText("");
 }
 
 void MainWindow::on_actionPublick_Server_triggered()
@@ -66,17 +84,37 @@ void MainWindow::on_actionPublick_Server_triggered()
 
     if(server->start())
     {
-        slotWriteToUser("Server successfully created.");
+        slotWriteToUser("Public server successfully created.");
     }
     else
-        slotWriteToUser("Failed to create server.");
+        slotWriteToUser("Failed to create public server.");
 
     slotConnectToAddress(server->getIpAddress());
 }
-
-void MainWindow::on_send_clicked()
+void MainWindow::on_actionPrivate_Server_triggered()
 {
-    parseInput();
+    if(QNetworkInterface::allAddresses().size() <= 2)
+    {
+        slotWriteToUser("Need internet connection.");
+        return;
+    }
+
+    if(server)
+    {
+        client->slotDisconnect();
+        delete server;
+    }
+
+    server = new Server(true);
+
+    if(server->start())
+    {
+        slotWriteToUser("Private server successfully created.");
+    }
+    else
+        slotWriteToUser("Failed to create private server.");
+
+    slotConnectToAddress(server->getIpAddress());
 }
 
 void MainWindow::slotConnectToAddress(QHostAddress address)
@@ -98,3 +136,4 @@ void MainWindow::on_actionConnect_triggered()
     connect(ad, &AddressDialog::signalReturnAddress, this, &MainWindow::slotConnectToAddress);
     ad->show();
 }
+

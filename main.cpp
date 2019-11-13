@@ -6,7 +6,6 @@
 #include "mainwindow.h"
 #include "passwordsharing.h"
 
-#include <QNetworkInterface>
 
 int main(int argc, char *argv[])
 {

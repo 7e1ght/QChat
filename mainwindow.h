@@ -35,6 +35,7 @@ private slots:
     void on_send_clicked();
     void on_actionConnect_triggered();
     void slotConnectToAddress(QHostAddress address);
+    void on_actionPrivate_Server_triggered();
 };
 
 #endif // MAINWINDOW_H

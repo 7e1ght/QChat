@@ -4,7 +4,9 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include <QObject>
-#include "config.h"
+
+#include "passwordsharing.h"
+#include "support.h"
 
 class Client : public QObject
 {
@@ -16,7 +18,10 @@ private:
     QTcpSocket* socket;
     QHostAddress connectedAddress;
 
-    void parseDataFromServer(QJsonDocument data);
+    PasswordSharing ps;
+    bool cryptMessage;
+
+    void parseDataFromServer(QByteArray byteMessage);
     void setId(unsigned id);
 
 public:

@@ -1,8 +1,10 @@
 #include "server.h"
 #include "connectionthread.h"
-#include "config.h"
+#include "support.h"
 
 #include <QNetworkInterface>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 bool Server::isPrivate()
 {
@@ -16,24 +18,63 @@ QHostAddress Server::getIpAddress()
 
 void Server::slotNewConnection()
 {
-    QTcpSocket* socket = serverSocket->nextPendingConnection();
-    ConnectionThread* ct = new ConnectionThread(socket, lastId++);
+    if( (privateServer && currentConnection < 2) || !privateServer)
+    {
+        QTcpSocket* socket = serverSocket->nextPendingConnection();
 
-    connect(ct, &QThread::finished, ct, &QThread::deleteLater);
+        ConnectionThread* ct = new ConnectionThread(socket, lastId++);
 
-    connect(ct, &ConnectionThread::signalClientWrote, this, &Server::signalWriteToClients, Qt::QueuedConnection);
-    connect(this, &Server::signalWriteToClients, ct, &ConnectionThread::slotSendToClient);
+        currentConnection++;
 
-    connect(ct, &ConnectionThread::signalClientDisconnect, this, &Server::slotClientDisconnect);
+        QJsonObject obj;
+        obj["type"] = config::messageType::connection;
+        obj["state"] = config::messageState::ok;
+        obj["data"] = QString::number(lastId-1);
+        if(currentConnection == 2 && privateServer)
+            obj["initPS"] = config::messageState::startInit;
+        else
+            obj["initPS"] = config::messageState::none;
 
-    ct->start();
+        socket->write(QJsonDocument(obj).toJson());
 
-    currentConnection++;
+        connect(ct, &QThread::finished, ct, &QThread::deleteLater);
+
+        connect(ct, &ConnectionThread::signalClientWrote, this, &Server::signalWriteToClients, Qt::QueuedConnection);
+        connect(this, &Server::signalWriteToClients, ct, &ConnectionThread::slotSendToClient);
+
+        connect(ct, &ConnectionThread::signalClientDisconnect, this, &Server::slotClientDisconnect);
+
+        ct->start();
+    }
+    else if(privateServer && currentConnection == 2)
+    {
+        QTcpSocket* socket = serverSocket->nextPendingConnection();
+
+        QJsonObject obj;
+        obj["type"] = config::messageType::connection;
+        obj["state"] = config::messageState::denied;
+        obj["data"] = "No free slots on server. Disconnecting...";
+
+        socket->write(QJsonDocument(obj).toJson());
+
+        socket->close();
+        socket->waitForBytesWritten();
+        socket->deleteLater();
+    }
 }
 
 void Server::slotClientDisconnect()
 {
     currentConnection--;
+
+    if(privateServer && currentConnection == 1);
+    {
+        QJsonObject obj;
+        obj["type"] = config::messageType::passwordSharing;
+        obj["state"] = config::messageState::close;
+
+        emit signalWriteToClients(QJsonDocument(obj).toJson(), -1);
+    }
 }
 
 //void Server::slotWriteToClients(QByteArray data, unsigned notToId)

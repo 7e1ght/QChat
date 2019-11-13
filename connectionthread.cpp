@@ -1,5 +1,5 @@
 #include "connectionthread.h"
-#include "config.h"
+#include "support.h"
 
 #include <QThread>
 #include <QTime>
@@ -13,6 +13,8 @@ void ConnectionThread::slotReadClient()
     while(clientSocket->bytesAvailable() > 0)
             message += clientSocket->readAll();
 
+    qDebug() << "Server: " + message;
+
     emit signalClientWrote(message, id);
 }
 
@@ -20,6 +22,8 @@ void ConnectionThread::slotSendToClient(QByteArray data, unsigned notToId)
 {
     if(id != notToId)
         clientSocket->write(data);
+
+    clientSocket->waitForBytesWritten(5000);
 }
 
 void ConnectionThread::run()
@@ -33,6 +37,7 @@ void ConnectionThread::run()
 void ConnectionThread::slotDisconnect()
 {
     clientSocket->close();
+//    clientSocket->deleteLater(); //
 
     emit signalClientDisconnect();
 
@@ -42,6 +47,8 @@ void ConnectionThread::slotDisconnect()
 ConnectionThread::ConnectionThread(QTcpSocket* socket, unsigned id) :
     clientSocket(socket), id(id)
 {
+
+
 }
 
 //ConnectionThread::~ConnectionThread()
