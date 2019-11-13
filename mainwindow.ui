@@ -1,24 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>1018</width>
+    <height>583</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QListWidget" name="inMessage"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLineEdit" name="outMessage"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="send">
+          <property name="text">
+           <string>SEND</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1018</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuServer">
+    <property name="title">
+     <string>S&amp;erver</string>
+    </property>
+    <widget class="QMenu" name="menuCreate">
+     <property name="title">
+      <string>Create</string>
+     </property>
+     <addaction name="actionPublick_Server"/>
+     <addaction name="actionPrivate_Server"/>
+    </widget>
+    <addaction name="menuCreate"/>
+    <addaction name="actionConnect"/>
+   </widget>
+   <addaction name="menuServer"/>
+  </widget>
+  <action name="actionConnect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionPublick_Server">
+   <property name="text">
+    <string>Publick Server</string>
+   </property>
+  </action>
+  <action name="actionPrivate_Server">
+   <property name="text">
+    <string>Private Server</string>
+   </property>
+  </action>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

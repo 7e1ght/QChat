@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,13 +26,27 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    passwordsharing.cpp \
+    crypt.cpp \
+    client.cpp \
+    server.cpp \
+    connectionthread.cpp \
+    addressdialog.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    passwordsharing.h \
+    crypt.h \
+    client.h \
+    config.h \
+    server.h \
+    connectionthread.h \
+    addressdialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    addressdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

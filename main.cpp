@@ -1,5 +1,12 @@
-#include "mainwindow.h"
 #include <QApplication>
+#include <QDebug>
+#include <QVector>
+
+#include "crypt.h"
+#include "mainwindow.h"
+#include "passwordsharing.h"
+
+#include <QNetworkInterface>
 
 int main(int argc, char *argv[])
 {
